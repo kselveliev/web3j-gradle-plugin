@@ -12,18 +12,34 @@ plugins {
 description = 'Gradle plugin providing tasks to generate Web3j contracts from Solidity.'
 sourceCompatibility = 17
 
+// the below is just for local use
 ext {
-    web3jVersion = version
+    web3jVersion = '1.0.4-custom'
+    web3jVersionCore = version
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components["java"])
+            groupId = "org.web3j"
+            artifactId = "web3j-gradle-plugin"
+            version = "1.0.4-custom"
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 apply {
     [
-        'jacoco',
-        'java',
-        'javadoc',
-        'repositories',
-        'spotless',
-        'junit'
+            'jacoco',
+            'java',
+            'javadoc',
+            'repositories',
+            'spotless',
+            'junit'
     ].each { buildScript ->
         download {
             src "https://raw.githubusercontent.com/hyperledger/web3j-build-tools/main/gradle/$buildScript/build.gradle"
@@ -44,10 +60,10 @@ repositories {
 
 dependencies {
     implementation "org.web3j.solidity:solidity-gradle-plugin:$solidityPluginVersion"
-    implementation("org.web3j:core:$web3jVersion") {
+    implementation("org.web3j:core:$web3jVersionCore") {
         exclude group: 'org.slf4j', module: 'slf4j-nop'
     }
-    implementation("org.web3j:codegen:$web3jVersion") {
+    implementation("org.web3j:codegen:$web3jVersionCore") {
         exclude group: 'org.slf4j', module: 'slf4j-nop'
     }
 
@@ -70,10 +86,10 @@ gradlePlugin {
             description = 'Gradle plugin providing tasks to generate web3j contracts from Solidity.'
             displayName = description
             tags.set([
-                'solidity',
-                'ethereum',
-                'web3.js',
-                'web3j'
+                    'solidity',
+                    'ethereum',
+                    'web3.js',
+                    'web3j'
             ])
             id = 'org.web3j'
             implementationClass = 'org.web3j.gradle.plugin.Web3jPlugin'
