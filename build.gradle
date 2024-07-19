@@ -13,7 +13,22 @@ description = 'Gradle plugin providing tasks to generate Web3j contracts from So
 sourceCompatibility = 17
 
 ext {
-    web3jVersion = version
+    web3jVersion = '1.0.0-custom'
+    web3jVersionCore = version
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components["java"])
+            groupId = "org.web3j"
+            artifactId = "web3j-gradle-plugin"
+            version = "1.0.0-custom"
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 apply {
@@ -44,10 +59,10 @@ repositories {
 
 dependencies {
     implementation "org.web3j.solidity:solidity-gradle-plugin:$solidityPluginVersion"
-    implementation("org.web3j:core:$web3jVersion") {
+    implementation("org.web3j:core:$web3jVersionCore") {
         exclude group: 'org.slf4j', module: 'slf4j-nop'
     }
-    implementation("org.web3j:codegen:$web3jVersion") {
+    implementation("org.web3j:codegen:$web3jVersionCore") {
         exclude group: 'org.slf4j', module: 'slf4j-nop'
     }
 
